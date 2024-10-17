@@ -1,0 +1,72 @@
+############################################
+#----------这个是测试环境的配置文件------------#
+############################################
+
+# 监听端口
+server:
+  port: ":1002"
+
+#数据库配置
+db:
+  hostname: 127.0.0.1
+  port: 3306
+  username: root
+  password: root
+  dbname: demo
+
+# sqlLite 存储路径
+dbSqlite:
+  userSqliteRootPath: "./data/sqliteDbFile"
+
+# REDIS 相关配置
+redis:
+  addr: "127.0.0.1:6379"
+  password: ""
+  db: 0
+  # redis 的key前缀
+  preKey: "chatFox_"
+  #redis默认过期时间
+  expiration: 180
+
+#响应码
+reqCode:
+  # 成功
+  successCode: 2000
+  # 失败
+  failCode: 4000
+  # 没有权限状态码
+  authCode: 4001
+  # 错误
+  errorCode: 5000
+
+#代理配置
+proxy:
+  url: "http://127.0.0.1"
+  port: ":78900"
+  #全球代理 为空则不走代理
+  #示例 http://username:password@proxyserver:port
+  addr: ""
+  #国内代理 为空则不走代理
+  chinaAddr: ""
+
+
+# jwt相关配置
+jwt:
+  # 签发的KEY
+  signingKey: e410c252-7948-4ba3-a1e7-066cb20dcce2
+  # TOkEN 过期时间  天
+  expiresTime: 7
+  # 签发人
+  issuer: WangADuo
+
+
+#加密配置
+encipher:
+  # RAS 加密的公钥文件
+  pemFile: "./config/privateKey.pem"
+  pubFile: "./config/publicKey.pem"
+  #是否开启加密
+  IsEncrypt:
+
+
+
