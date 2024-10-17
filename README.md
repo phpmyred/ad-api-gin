@@ -2,6 +2,8 @@
 
 用GIN 搭建的api 服务服务
 
+web_app 是vite 搭建  的vue3 + elemui + 滑块验证的 前端
+
 初始化
 go mod tidy
 
