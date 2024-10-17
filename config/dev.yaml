@@ -6,6 +6,9 @@
 server:
   port: ":1001"
 
+gin:
+  model: debug
+
 #数据库配置
 db:
   hostname: 127.0.0.1
@@ -66,7 +69,14 @@ encipher:
   pemFile: "./config/privateKey.pem"
   pubFile: "./config/publicKey.pem"
   #是否开启加密
-  IsEncrypt:
+  IsEncrypt: false
+
+# 验证码配置
+captcha:
+  isOpen: true
+  len: 6
+  # 验证码 缓存选择 redis 跟 mem
+  cache: mem
 
 
 

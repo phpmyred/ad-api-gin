@@ -6,6 +6,9 @@
 server:
   port: ":1000"
 
+gin:
+  model: release
+
 #数据库配置
 db:
   hostname: 127.0.0.1

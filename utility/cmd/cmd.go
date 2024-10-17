@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/WangaduoApi/ad-api-gin/router"
 	"github.com/WangaduoApi/ad-api-gin/utility/Z"
 	"github.com/WangaduoApi/ad-api-gin/utility/Z/captcha"
 	"github.com/WangaduoApi/ad-api-gin/utility/db"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"net/http"
 	"os"
@@ -33,14 +33,8 @@ func init() {
 
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "是否开启debug")
 
-	err := viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
-	if err != nil {
-		return
-	}
-	viper.SetDefault("gin.mode", rootCmd.PersistentFlags().Lookup("debug"))
+	viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
 
-	fmt.Println(viper.GetBool("gin.mode"))
-	fmt.Println(viper.GetString("author"))
 	initConfig()
 
 }
@@ -51,7 +45,7 @@ func init() {
 // @Return error
 func Execute() error {
 	rootCmd.RunE = func(cmd *cobra.Command, args []string) error {
-
+		gin.SetMode(viper.GetString("gin.model"))
 		// MYSQL配置
 		err := db.MysqlInit()
 		if err != nil {

@@ -31,12 +31,12 @@ var blockPuzzleConfig = &config2.BlockPuzzleConfig{Offset: 10}
 
 // 行为校验配置模块（具体参数可从业务系统配置文件自定义）
 
-var isChaVal = viper.GetString("")
-var captchaConfig = config2.BuildConfig(constant.RedisCacheKey, "./config", watermarkConfig,
+// var isChaVal = viper.GetString("")
+var captchaConfig = config2.BuildConfig(viper.GetString("captcha.cache"), "./config", watermarkConfig,
 	clickWordConfig, blockPuzzleConfig, 2*60)
 
-var captchaConfig = config2.BuildConfig(constant.MemCacheKey, "./config", watermarkConfig,
-	clickWordConfig, blockPuzzleConfig, 2*60)
+//var captchaConfig = config2.BuildConfig(constant.MemCacheKey, "./config", watermarkConfig,
+//	clickWordConfig, blockPuzzleConfig, 2*60)
 
 // 服务工厂，主要用户注册 获取 缓存和验证服务
 var Factory = service.NewCaptchaServiceFactory(captchaConfig)
@@ -47,13 +47,20 @@ var Factory = service.NewCaptchaServiceFactory(captchaConfig)
 // @Author aDuo 2024-10-04 21:00:15
 
 func CaptchaInit() {
-	// 这里默认是注册了 内存缓存，但是不足以应对生产环境，希望自行注册缓存驱动 实现缓存接口即可替换（CacheType就是注册进去的 key）
-	//Factory.RegisterCache(constant.MemCacheKey, service.NewMemCacheService(20)) // 这里20指的是缓存阈值
 
 	//注册使用默认redis数据库
 	//Factory.RegisterCache(constant.RedisCacheKey, service.NewDftRedisCacheService(20))
-	//注册自定义配置redis数据库
-	Factory.RegisterCache(constant.RedisCacheKey, service.NewConfigRedisCacheService([]string{viper.GetString("redis.addr")}, "", "", false, viper.GetInt("redis.db")))
+	if viper.GetString("captcha.cache") == "redis" {
+		//注册自定义配置redis数据库
+		Factory.RegisterCache(constant.RedisCacheKey,
+			service.NewConfigRedisCacheService([]string{viper.GetString("redis.addr")},
+				"", "", false,
+				viper.GetInt("redis.db")))
+	} else {
+		// 这里默认是注册了 内存缓存，但是不足以应对生产环境，希望自行注册缓存驱动 实现缓存接口即可替换（CacheType就是注册进去的 key）
+		//// 这里20指的是缓存阈值
+		Factory.RegisterCache(constant.MemCacheKey, service.NewMemCacheService(20))
+	}
 
 	// 注册了两种验证码服务 可以自行实现更多的验证
 	Factory.RegisterService(constant.ClickWordCaptcha, service.NewClickWordCaptchaService(Factory))
